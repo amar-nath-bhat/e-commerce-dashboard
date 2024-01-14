@@ -9,19 +9,25 @@ function ProductList() {
   }, []);
 
   const getProducts = async () => {
-    let result = await fetch("http://localhost:5001/products", {
-      headers: {
-        authorization: JSON.parse(localStorage.getItem("token")),
-      },
-    });
+    let result = await fetch(
+      "https://e-commerce-dashboard-server.vercel.app/products",
+      {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    );
     result = await result.json();
     setProducts(result);
   };
 
   const deleteProduct = async (id) => {
-    let result = await fetch(`http://localhost:5001/product/${id}`, {
-      method: "Delete",
-    });
+    let result = await fetch(
+      `https://e-commerce-dashboard-server.vercel.app/product/${id}`,
+      {
+        method: "Delete",
+      }
+    );
     result = await result.json();
     if (result) {
       getProducts();
@@ -32,7 +38,9 @@ function ProductList() {
     let key = event.target.value;
     // console.warn(event.target.value);
     if (key) {
-      let result = await fetch(`http://localhost:5001/search/${key}`);
+      let result = await fetch(
+        `https://e-commerce-dashboard-server.vercel.app/search/${key}`
+      );
       result = await result.json();
       console.warn(result);
       if (result) {

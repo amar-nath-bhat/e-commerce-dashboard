@@ -14,13 +14,16 @@ function Login() {
 
   const loginhandle = async () => {
     console.warn(email);
-    let result = await fetch("http://localhost:5001/login", {
-      method: "post",
-      body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let result = await fetch(
+      "https://e-commerce-dashboard-server.vercel.app/login",
+      {
+        method: "post",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     result = await result.json();
     console.warn(result);

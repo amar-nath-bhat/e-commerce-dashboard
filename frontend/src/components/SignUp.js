@@ -14,13 +14,16 @@ function SignUp() {
   });
 
   const collectData = async () => {
-    let result = await fetch("http://localhost:5001/signup", {
-      method: "post",
-      body: JSON.stringify({ name, email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let result = await fetch(
+      "https://e-commerce-dashboard-server.vercel.app/signup",
+      {
+        method: "post",
+        body: JSON.stringify({ name, email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     result = await result.json();
     localStorage.setItem("user", JSON.stringify(result.result));

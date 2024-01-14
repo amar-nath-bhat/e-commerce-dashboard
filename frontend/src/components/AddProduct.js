@@ -14,13 +14,16 @@ function AddProduct() {
     }
 
     const userID = JSON.parse(localStorage.getItem("user"))._id;
-    let result = await fetch("http://localhost:5001/add-product", {
-      method: "post",
-      body: JSON.stringify({ name, price, company, category, userID }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let result = await fetch(
+      "https://e-commerce-dashboard-server.vercel.app/add-product",
+      {
+        method: "post",
+        body: JSON.stringify({ name, price, company, category, userID }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     result = await result.json();
     localStorage.setItem("product", JSON.stringify(result));

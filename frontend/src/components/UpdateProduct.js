@@ -14,7 +14,9 @@ function UpdateProduct() {
 
   const getProductDetails = async () => {
     // console.warn(params.id);
-    let result = await fetch(`http://localhost:5001/product/${params.id}`);
+    let result = await fetch(
+      `https://e-commerce-dashboard-server.vercel.app/product/${params.id}`
+    );
     result = await result.json();
     setName(result.name);
     setPrice(result.price);
@@ -37,13 +39,16 @@ function UpdateProduct() {
   // };
   const updateProduct = async () => {
     console.warn(name, price, category, company);
-    let result = await fetch(`http://localhost:5001/product/${params.id}`, {
-      method: "Put",
-      body: JSON.stringify({ name, price, category, company }),
-      headers: {
-        "Content-Type": "Application/json",
-      },
-    });
+    let result = await fetch(
+      `https://e-commerce-dashboard-server.vercel.app/product/${params.id}`,
+      {
+        method: "Put",
+        body: JSON.stringify({ name, price, category, company }),
+        headers: {
+          "Content-Type": "Application/json",
+        },
+      }
+    );
     result = await result.json();
     if (result) {
       navigate("/");

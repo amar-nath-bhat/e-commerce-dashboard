@@ -1,0 +1,23 @@
+.nav-ul li{
+  display: inline-block;
+  padding: 10px;
+}
+
+footer{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+}
+
+.invalid-input{
+  margin-top: -20px;
+  margin-left: 53px;
+  color: red;
+  display: block;
+  margin-bottom: 10px;
+}
+.signup{
+  width: 800px;
+}
+

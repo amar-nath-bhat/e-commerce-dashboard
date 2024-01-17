@@ -8,11 +8,11 @@ const Product = require("./db/Product");
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(
-  cors({
-    origin: "https://e-commerce-dashboard-server.vercel.app",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://e-commerce-dashboard-server.vercel.app",
+//   })
+// );
 
 app.post("/signup", async (req, resp) => {
   let user = new User(req.body);

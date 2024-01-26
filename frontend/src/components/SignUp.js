@@ -86,20 +86,6 @@ function SignUp() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {/* <div className="mb-4 input-group">
-                    <span className="input-group-text">
-                    <i className="bi bi-check-circle-fill text-primary"></i>
-                    </span>
-                    <input
-                    type="password"
-                    className="form-control"
-                    id="InputPassword"
-                    placeholder="Confirm Password"
-                    required
-                    name="confirm"
-                    form="form1"
-                    />
-                </div> */}
             <div className="text-center">
               <button
                 className="btn btn-primary text-white"

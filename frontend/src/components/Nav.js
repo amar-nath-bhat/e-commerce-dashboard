@@ -51,12 +51,6 @@ const Nav = () => {
                     Update Product
                   </Link>
                 </li>
-                {/* 
-                <li className="nav-item mx-md-2 mb-2 mb-md-0">
-                  <Link className="nav-link" to="/profile">
-                    Profile
-                  </Link>
-                </li> */}
                 <li className="nav-item mx-md-2 mb-2 mb-md-0">
                   <Link className="nav-link" to="/signup" onClick={logout}>
                     Logout {JSON.parse(auth).name}

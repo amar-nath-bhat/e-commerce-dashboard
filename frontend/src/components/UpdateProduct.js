@@ -22,19 +22,6 @@ function UpdateProduct() {
     setCompany(result.company);
   };
 
-  // const updateProduct = async () => {
-  //   let result = await fetch(`http://localhost:5001/product/${params.id}`, {
-  //     method: "Put",
-  //     body: JSON.stringify({ name, price, category, company }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-
-  //   result = await result.json();
-  //   localStorage.setItem("product", JSON.stringify(result));
-  //   navigate("/");
-  // };
   const updateProduct = async () => {
     console.warn(name, price, category, company);
     let result = await fetch(`http://localhost:5001/product/${params.id}`, {

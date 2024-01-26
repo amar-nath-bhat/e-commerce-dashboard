@@ -5,7 +5,8 @@
 
 footer{
   width: 100%;
-  position: absolute;
+  position: fixed;
+  z-index: 1;
   bottom: 0;
   text-align: center;
 }
@@ -20,4 +21,23 @@ footer{
 .signup{
   width: 800px;
 }
+
+.table-responsive{
+  width: 0vh;
+}
+
+.btn-pair {
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 760px) {
+  .btn-pair {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+
 

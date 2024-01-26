@@ -78,9 +78,9 @@ function ProductList() {
                 <td>${item.price}</td>
                 <td>{item.category}</td>
                 <td>{item.company}</td>
-                <td>
+                <td className="btn-pair d-flex gap-3">
                   <button
-                    className="btn btn-primary me-2"
+                    className="btn btn-primary"
                     onClick={() => {
                       deleteProduct(item._id);
                     }}
@@ -88,7 +88,7 @@ function ProductList() {
                     Delete
                   </button>
                   <Link to={`update/${item._id}`}>
-                    <button className="btn btn-primary ms-2">Update</button>
+                    <button className="btn btn-primary">Update</button>
                   </Link>
                 </td>
               </tr>

@@ -1,39 +1,58 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { CONNECTION_URI } from "../constants";
+
+const updateInitialValues = {
+  name: "",
+  price: "",
+  company: "",
+  category: "",
+};
+
 function UpdateProduct() {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [company, setCompany] = useState("");
-  const [category, setCategory] = useState("");
+  const [updateValues, setUpdateValues] = useState(updateInitialValues);
   const params = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getProductDetails();
-  }, []);
-
-  const getProductDetails = async () => {
-    // console.warn(params.id);
-    let result = await fetch(`http://localhost:5001/product/${params.id}`);
-    result = await result.json();
-    setName(result.name);
-    setPrice(result.price);
-    setCategory(result.category);
-    setCompany(result.company);
+  const handleChange = (e) => {
+    setUpdateValues({ ...updateValues, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    const getProductDetails = async () => {
+      let result = await fetch(`${CONNECTION_URI}/product/${params.id}`, {
+        headers: {
+          authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+
+      result = await result.json();
+      if (result.success) {
+        setUpdateValues(result.product);
+      } else {
+        alert(result.message);
+        navigate("/");
+      }
+    };
+    getProductDetails();
+  }, [params.id]);
+
   const updateProduct = async () => {
-    console.warn(name, price, category, company);
-    let result = await fetch(`http://localhost:5001/product/${params.id}`, {
+    let result = await fetch(`${CONNECTION_URI}/update/${params.id}`, {
       method: "Put",
-      body: JSON.stringify({ name, price, category, company }),
+      body: JSON.stringify(updateValues),
       headers: {
         "Content-Type": "Application/json",
+        authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
     result = await result.json();
-    if (result) {
+    if (result.success) {
+      alert(result.message);
+      setUpdateValues(updateInitialValues);
       navigate("/");
+    } else {
+      alert(result.message);
     }
   };
 
@@ -57,8 +76,8 @@ function UpdateProduct() {
                 required
                 name="name"
                 form="form1"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={updateValues.name}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="input-group mb-4">
@@ -73,8 +92,8 @@ function UpdateProduct() {
                 required
                 name="price"
                 form="form1"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={updateValues.price}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="input-group mb-4">
@@ -89,8 +108,8 @@ function UpdateProduct() {
                 required
                 name="category"
                 form="form1"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={updateValues.category}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="input-group mb-4">
@@ -105,15 +124,15 @@ function UpdateProduct() {
                 required
                 name="company"
                 form="form1"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
+                value={updateValues.company}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="text-center">
               <button
                 className="btn btn-primary text-white"
                 type="button"
-                onClick={updateProduct}
+                onClick={() => updateProduct()}
               >
                 Update Product
               </button>

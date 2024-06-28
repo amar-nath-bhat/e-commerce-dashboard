@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { CONNECTION_URI } from "../constants";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -9,34 +10,43 @@ function ProductList() {
   }, []);
 
   const getProducts = async () => {
-    let result = await fetch("http://localhost:5001/products", {
+    let result = await fetch(`${CONNECTION_URI}/products`, {
       headers: {
-        authorization: JSON.parse(localStorage.getItem("token")),
+        authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
     result = await result.json();
-    setProducts(result);
+    setProducts(result.products);
   };
 
   const deleteProduct = async (id) => {
-    let result = await fetch(`http://localhost:5001/product/${id}`, {
+    let result = await fetch(`${CONNECTION_URI}/delete/${id}`, {
       method: "Delete",
+      headers: {
+        authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
     });
     result = await result.json();
-    if (result) {
+    if (result.success) {
       getProducts();
+      alert(result.message);
+    } else {
+      alert(result.message);
     }
   };
 
   const searchProduct = async (event) => {
     let key = event.target.value;
-    // console.warn(event.target.value);
+    key = key.trim();
     if (key) {
-      let result = await fetch(`http://localhost:5001/search/${key}`);
+      let result = await fetch(`${CONNECTION_URI}/search/${key}`, {
+        headers: {
+          authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       result = await result.json();
-      console.warn(result);
-      if (result) {
-        setProducts(result);
+      if (result.success) {
+        setProducts(result.products);
       }
     } else {
       getProducts();
@@ -51,7 +61,7 @@ function ProductList() {
         type="search"
         placeholder="Search"
         aria-label="Search"
-        onChange={searchProduct}
+        onChange={(e) => searchProduct(e)}
       />
       <p
         className={products.length > 0 ? "d-none" : "d-block fs-1 text-danger"}
@@ -78,19 +88,24 @@ function ProductList() {
                 <td>${item.price}</td>
                 <td>{item.category}</td>
                 <td>{item.company}</td>
-                <td className="btn-pair d-flex gap-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => {
-                      deleteProduct(item._id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                  <Link to={`update/${item._id}`}>
-                    <button className="btn btn-primary">Update</button>
-                  </Link>
-                </td>
+
+                {item.userID === sessionStorage.getItem("user") ? (
+                  <td className="btn-pair d-flex gap-3">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        deleteProduct(item._id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <Link to={`update/${item._id}`}>
+                      <button className="btn btn-primary">Update</button>
+                    </Link>
+                  </td>
+                ) : (
+                  <td></td>
+                )}
               </tr>
             ))}
           </tbody>

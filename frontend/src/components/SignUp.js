@@ -1,33 +1,38 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CONNECTION_URI } from "../constants";
+
+const signupInitialValues = {
+  name: "",
+  email: "",
+  password: "",
+};
+
 function SignUp() {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [signup, setSignup] = useState(signupInitialValues);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const auth = localStorage.getItem("user");
-    if (auth) {
-      navigate("/");
-    }
-  });
+  const handleChange = (e) => {
+    setSignup({ ...signup, [e.target.name]: e.target.value });
+  };
 
-  const collectData = async () => {
-    let result = await fetch("http://localhost:5001/signup", {
+  const handleSignup = async () => {
+    // console.log(signup);
+    let result = await fetch(`${CONNECTION_URI}/signup`, {
       method: "post",
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify(signup),
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     result = await result.json();
-    localStorage.setItem("user", JSON.stringify(result.result));
-    localStorage.setItem("token", JSON.stringify(result.auth));
-    console.warn(result);
-    if (result) {
-      navigate("/");
+    if (result.success) {
+      setSignup(signupInitialValues);
+      alert(result.message);
+      navigate("/login");
+    } else {
+      alert(result.message);
+      navigate("/signup");
     }
   };
   return (
@@ -50,8 +55,7 @@ function SignUp() {
                 required
                 name="email"
                 form="form1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="input-group mb-4">
@@ -66,8 +70,7 @@ function SignUp() {
                 required
                 name="name"
                 form="form1"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="mb-4 input-group">
@@ -82,15 +85,14 @@ function SignUp() {
                 required
                 name="password"
                 form="form1"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="text-center">
               <button
                 className="btn btn-primary text-white"
                 type="button"
-                onClick={collectData}
+                onClick={(e) => handleSignup(e)}
               >
                 SignUp
               </button>

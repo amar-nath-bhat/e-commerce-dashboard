@@ -2,10 +2,11 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
-  const auth = localStorage.getItem("user");
+  const auth = sessionStorage.getItem("token");
   const navigate = useNavigate();
+
   const logout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     navigate("/signup");
   };
   return (
@@ -45,15 +46,9 @@ const Nav = () => {
                     Add Product
                   </Link>
                 </li>
-
-                <li className="nav-item mx-md-2 mb-2 mb-md-0">
-                  <Link className="nav-link" to="/update">
-                    Update Product
-                  </Link>
-                </li>
                 <li className="nav-item mx-md-2 mb-2 mb-md-0">
                   <Link className="nav-link" to="/signup" onClick={logout}>
-                    Logout {JSON.parse(auth).name}
+                    Logout
                   </Link>
                 </li>
               </ul>

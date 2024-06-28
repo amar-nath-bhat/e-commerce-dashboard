@@ -1,32 +1,45 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-function AddProduct() {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [company, setCompany] = useState("");
-  const [category, setCategory] = useState("");
-  const [error, setError] = useState(false);
-  const navigate = useNavigate();
-  const addProduct = async () => {
-    if (!name || !price || !category || !company) {
-      setError(true);
-      return false;
-    }
+import { CONNECTION_URI } from "../constants";
 
-    const userID = JSON.parse(localStorage.getItem("user"))._id;
-    let result = await fetch("http://localhost:5001/add-product", {
+const addProductInitialValues = {
+  name: "",
+  price: "",
+  company: "",
+  category: "",
+  userID: sessionStorage.getItem("user"),
+};
+
+function AddProduct() {
+  const [addProductDetails, setAddProductDetails] = useState(
+    addProductInitialValues
+  );
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setAddProductDetails({
+      ...addProductDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const addProduct = async () => {
+    let result = await fetch(`${CONNECTION_URI}/add-product`, {
       method: "post",
-      body: JSON.stringify({ name, price, company, category, userID }),
+      body: JSON.stringify(addProductDetails),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     });
 
     result = await result.json();
-    localStorage.setItem("product", JSON.stringify(result));
-    console.warn(result);
-    if (result) {
+    if (result.success) {
+      alert(result.message);
       navigate("/");
+    } else {
+      setError(result.message);
     }
   };
   return (
@@ -49,13 +62,10 @@ function AddProduct() {
                 required
                 name="name"
                 form="form1"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
-            {error && !name && (
-              <span className="invalid-input">Enter a valid name!</span>
-            )}
+
             <div className="input-group mb-4">
               <span className="input-group-text">
                 <i className="bi bi-currency-dollar text-primary"></i>
@@ -68,13 +78,10 @@ function AddProduct() {
                 required
                 name="price"
                 form="form1"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
-            {error && !price && (
-              <span className="invalid-input">Enter a valid price!</span>
-            )}
+
             <div className="input-group mb-4">
               <span className="input-group-text">
                 <i className="bi bi-tags-fill text-primary"></i>
@@ -87,13 +94,10 @@ function AddProduct() {
                 required
                 name="category"
                 form="form1"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
-            {error && !category && (
-              <span className="invalid-input">Enter a valid category!</span>
-            )}
+
             <div className="input-group mb-4">
               <span className="input-group-text">
                 <i className="bi bi-building-fill text-primary"></i>
@@ -106,22 +110,20 @@ function AddProduct() {
                 required
                 name="company"
                 form="form1"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
-            {error && !company && (
-              <span className="invalid-input">Enter a valid company!</span>
-            )}
+
             <div className="text-center">
               <button
                 className="btn btn-primary text-white"
                 type="button"
-                onClick={addProduct}
+                onClick={() => addProduct()}
               >
                 Add Product
               </button>
             </div>
+            {error && <p className="text-danger text-center mt-3">{error}</p>}
           </form>
         </div>
       </div>

@@ -1,2 +1,13 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/e-commerce");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+module.exports.connect = async () => {
+  await mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+      console.warn("MongoDB started");
+    })
+    .catch((error) => console.log("Error Connecting to MongoDB", error));
+};

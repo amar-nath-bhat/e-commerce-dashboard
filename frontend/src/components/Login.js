@@ -1,35 +1,37 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CONNECTION_URI } from "../constants";
+
+const loginInitialValues = {
+  email: "",
+  password: "",
+};
+
 function Login() {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState(loginInitialValues);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const auth = localStorage.getItem("user");
-    if (auth) {
-      navigate("/");
-    }
-  });
+  const handleChange = (e) => {
+    setLogin({ ...login, [e.target.name]: e.target.value });
+  };
 
-  const loginhandle = async () => {
-    console.warn(email);
-    let result = await fetch("http://localhost:5001/login", {
+  const handleLogin = async () => {
+    let result = await fetch(`${CONNECTION_URI}/login`, {
       method: "post",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(login),
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     result = await result.json();
-    console.warn(result);
-    if (result.auth) {
-      localStorage.setItem("user", JSON.stringify(result.user));
-      localStorage.setItem("token", JSON.stringify(result.auth));
+    if (result) {
+      setLogin(loginInitialValues);
+      alert(result.message);
+      sessionStorage.setItem("token", result.token);
+      sessionStorage.setItem("user", result.user._id);
       navigate("/");
     } else {
-      alert("Please Enter Correct Details");
+      navigate("/login");
     }
   };
   return (
@@ -52,8 +54,7 @@ function Login() {
                 required
                 name="email"
                 form="form1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="mb-4 input-group">
@@ -68,15 +69,14 @@ function Login() {
                 required
                 name="password"
                 form="form1"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
             </div>
             <div className="text-center">
               <button
                 className="btn btn-primary text-white"
                 type="button"
-                onClick={loginhandle}
+                onClick={() => handleLogin()}
               >
                 LogIn
               </button>

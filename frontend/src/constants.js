@@ -1,1 +1,1 @@
-export const CONNECTION_URI = "http://localhost:5000";
+export const CONNECTION_URI = "https://e-commerce-dashboard-wheat.vercel.app";

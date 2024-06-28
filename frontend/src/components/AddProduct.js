@@ -7,7 +7,7 @@ const addProductInitialValues = {
   price: "",
   company: "",
   category: "",
-  userID: sessionStorage.getItem("user"),
+  userID: "",
 };
 
 function AddProduct() {
@@ -25,6 +25,11 @@ function AddProduct() {
   };
 
   const addProduct = async () => {
+    console.log(addProductDetails);
+
+    if (addProductDetails.userID === "") {
+      addProductDetails.userID = sessionStorage.getItem("user");
+    }
     let result = await fetch(`${CONNECTION_URI}/add-product`, {
       method: "post",
       body: JSON.stringify(addProductDetails),
@@ -38,6 +43,7 @@ function AddProduct() {
     if (result.success) {
       alert(result.message);
       navigate("/");
+      setAddProductDetails(addProductInitialValues);
     } else {
       setError(result.message);
     }
